@@ -1,0 +1,12 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: app
+build:
+  artifacts:
+    - image: app-image-name
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+manifests:
+  rawYaml:
+    - k8s/app.yaml
