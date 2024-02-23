@@ -27,9 +27,9 @@ func nameFromPath(path string) string {
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		name := nameFromPath(r.URL.Path)
-		_, _ = fmt.Fprintf(w, "Hi, %q: %d", name, count(name))
+		_, _ = fmt.Fprintf(w, "Hi, %q: %d", name, pgcount(name))
 	})
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

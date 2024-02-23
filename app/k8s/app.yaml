@@ -4,8 +4,8 @@ metadata:
   name: app-service
 spec:
   ports:
-  - port: 8080
-    name: http
+    - port: 8080
+      name: http
   type: LoadBalancer
   selector:
     app: labeled-app
@@ -15,6 +15,7 @@ kind: Deployment
 metadata:
   name: app
 spec:
+  replicas: 1 # kpt-set: ${app-replicas}
   selector:
     matchLabels:
       app: labeled-app
@@ -24,8 +25,12 @@ spec:
         app: labeled-app
     spec:
       containers:
-      - name: app
-        image: app-image-name
-        imagePullPolicy: Never
-        ports:
-          - containerPort: 8080
+        - name: app
+          image: app-image-name
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: DATABASE_URL
+              value: postgres://pgapp:example@postgres.default.svc.cluster.local:5432/pgapp

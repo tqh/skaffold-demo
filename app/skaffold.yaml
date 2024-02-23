@@ -1,12 +1,27 @@
-apiVersion: skaffold/v4beta6
+apiVersion: skaffold/v4beta5
 kind: Config
 metadata:
   name: app
 build:
   artifacts:
     - image: app-image-name
-      buildpacks:
-        builder: gcr.io/buildpacks/builder:v1
+      ko:
+        main: ./cmd
+        ldflags:
+          - -s
+          - -w
+          - -extldflags "-static"
+
 manifests:
   rawYaml:
+    - k8s/postgres-secret.yaml
+    - k8s/postgres-pv.yaml
+    - k8s/postgres-pv-claim.yaml
+    - k8s/postgres.yaml
     - k8s/app.yaml
+# Only seems to work on command-line skaffold dev, not in IDE
+#  transform:
+#    - name: apply-setters
+#      configMap:
+#        - "app-replicas:3"
+#        - "pg-password:c3Ryb25n"
